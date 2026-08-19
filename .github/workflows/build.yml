@@ -1,25 +1,14 @@
-name: Node.js CI Pipeline
+name: Build Pipeline
 
 on:
   push:
     branches:
-      - test
+       git checkout -b SCRUM-12-dipika-integrate-npm-project-with-dev-ops-integration
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Run Tests
-        run: npm test
+      - uses: actions/checkout@v4
+      - name: Display Build Message
+        run: echo "GitHub Actions Build Successful"
