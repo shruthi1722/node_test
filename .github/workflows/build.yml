@@ -1,0 +1,49 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-and-smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Docker image
+        run: docker build --tag node-app:${{ github.sha }} .
+
+      - name: Run container
+        run: docker run --detach --name node-app-smoke --publish 127.0.0.1:3000:3000 node-app:${{ github.sha }}
+
+      - name: Smoke-test container
+        run: |
+          for attempt in $(seq 1 10); do
+            if curl --fail --silent http://127.0.0.1:3000/todos; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs node-app-smoke
+          exit 1
+
+      - name: Clean up container
+        if: always()
+        run: |
+          container_id=$(docker ps --all --quiet --filter name=^/node-app-smoke$)
+          if [ -n "$container_id" ]; then
+            docker rm --force "$container_id"
+          fi
