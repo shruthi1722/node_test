@@ -1,0 +1,16 @@
+name: Build Pipeline
+
+on:
+  push:
+    branches:
+      - 'copy-paste-your-branch-name'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Display Build Message
+        run: echo "GitHub Actions Build Successful"
