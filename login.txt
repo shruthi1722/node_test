@@ -1,0 +1,4 @@
+Student Login Feature
+Jira Issue: SCRUM-6
+Description: This file represents the student login task.
+Status: Implementation started.
