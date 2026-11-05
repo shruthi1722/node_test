@@ -17,3 +17,4 @@ if (require.main === module) {
 }
 
 module.exports = app;
+// Jira and GitHub integration - KAN-1
